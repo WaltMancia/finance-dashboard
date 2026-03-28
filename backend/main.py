@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from app.interfaces.routes import auth_router
 
 app = FastAPI(
     title=settings.app_name,
@@ -20,6 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Prefijo global /api/v1 para todas las rutas
+app.include_router(auth_router.router, prefix="/api/v1")
 
 @app.get("/health")
 def health_check():
