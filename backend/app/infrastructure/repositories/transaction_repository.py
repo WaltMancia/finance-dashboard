@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func
+from sqlalchemy import func, text
 from datetime import datetime
 from decimal import Decimal
 from app.infrastructure.database.models import Transaction, TransactionType
@@ -123,3 +123,31 @@ def get_summary(db: Session, user_id: int) -> dict:
         "total_expenses": float(total_expenses),
         "balance": float(total_income - total_expenses),
     }
+
+def find_all_for_analytics(db: Session, user_id: int) -> list[dict]:
+    """
+    Trae todas las transacciones con datos de categoría aplanados.
+    Usamos una query SQL directa para máxima eficiencia.
+    text() permite escribir SQL puro cuando el ORM no es lo más eficiente.
+    """
+    query = text("""
+        SELECT
+            t.id,
+            t.amount,
+            t.type,
+            t.date,
+            t.description,
+            t.category_id,
+            COALESCE(c.name, 'Sin categoría')  AS category_name,
+            COALESCE(c.color, '#94a3b8')        AS category_color,
+            COALESCE(c.icon, '📦')              AS category_icon
+        FROM transactions t
+        LEFT JOIN categories c ON t.category_id = c.id
+        WHERE t.user_id = :user_id
+        ORDER BY t.date DESC
+    """)
+
+    rows = db.execute(query, {"user_id": user_id}).fetchall()
+
+    # Convertimos cada Row a dict para que Pandas lo entienda
+    return [row._asdict() for row in rows]
