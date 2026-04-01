@@ -265,3 +265,19 @@ invalid-date,Fecha mala,50.00,expense
         assert "invalid_rows" in preview
         assert "preview" in preview
         assert isinstance(preview["preview"], list)
+        assert preview["preview"][0]["category_name"] == "Otros"
+
+    def test_detects_category_from_description(self):
+        """La categoría debe inferirse desde la descripción cuando no viene en el CSV."""
+        from app.infrastructure.ml.csv_processor import CSVProcessor
+
+        csv_content = b"""date,description,amount,type
+2024-01-15,Supermercado del mes,150.00,expense
+2024-01-16,Salario enero,3000.00,income
+"""
+        processor = CSVProcessor(csv_content, "test.csv")
+        df = processor.process()
+
+        category_names = list(df["category_name"])
+        assert category_names[0] == "Alimentación"
+        assert category_names[1] == "Salario"

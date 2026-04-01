@@ -23,6 +23,7 @@ class CSVPreviewRow(BaseModel):
     description: str | None
     amount: float
     type: str           # "income" o "expense"
+    category_name: str | None = None
     is_valid: bool
     error: str | None   # Si la fila tiene un problema, lo describimos aquí
 

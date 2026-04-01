@@ -1,8 +1,8 @@
 import pandas as pd
-import numpy as np
 from datetime import datetime, timezone
 from decimal import Decimal
 from io import BytesIO
+import unicodedata
 
 
 # Mapeos de nombres de columnas comunes en distintos bancos/apps
@@ -21,6 +21,10 @@ COLUMN_MAPPINGS = {
     "amount": [
         "amount", "monto", "importe", "value", "valor",
         "Amount", "Monto", "Importe",
+    ],
+    "category": [
+        "category", "categoria", "categoría", "cat", "rubro",
+        "Category", "Categoria", "Categoría",
     ],
     "type": [
         "type", "tipo", "transaction_type", "tipo_transaccion",
@@ -51,6 +55,47 @@ DATE_FORMATS = [
     "%d/%m/%Y %H:%M", # 15/01/2024 10:30
 ]
 
+CATEGORY_PATTERNS = [
+    (
+        "Salario",
+        ["salario", "nomina", "nómina", "sueldo", "payroll", "salary", "remuneracion", "remuneración", "pago", "deposito", "jubilación", "pensión", "freelance", "cliente"],
+    ),
+    (
+        "Alimentación",
+        ["supermercado", "restaurante", "restaurant", "comida", "food", "grocery", "mercado", "uber eats", "rappi", "delivery", "cafe", "coffee", "almuerzo", "desayuno", "lunch", "dinner"],
+    ),
+    (
+        "Transporte",
+        ["uber", "taxi", "gasolina", "gasolinera", "metro", "bus", "autobus", "autobús", "parking", "estacionamiento", "peaje", "cabify", "didi", "transporte"],
+    ),
+    (
+        "Entretenimiento",
+        ["netflix", "spotify", "disney", "cine", "movie", "pelicula", "película", "concert", "concierto", "game", "juego", "streaming"],
+    ),
+    (
+        "Salud",
+        ["farmacia", "medico", "médico", "doctor", "hospital", "clinica", "clínica", "consulta", "gym", "gimnasio", "salud"],
+    ),
+    (
+        "Educación",
+        ["curso", "educacion", "educación", "universidad", "colegio", "escuela", "libro", "books", "udemy", "coursera", "estudio", "learning", "mensualidad escolar", "matricula"],
+    ),
+    (
+        "Ropa",
+        ["ropa", "clothing", "camisa", "pantalon", "pantalón", "zapato", "shoes", "sneaker", "moda", "fashion", "vestimenta", "outfit", "short", "falda", "sweater", "chaqueta", "abrigo", "dress", "traje", "accesorio", "accesorios"],
+    ),
+    (
+        "Hogar",
+        ["hogar", "casa", "alquiler", "renta", "mortgage", "muebles", "furniture", "decoracion", "decoración", "home"],
+    ),
+    (
+        "Servicios",
+        ["luz", "agua", "internet", "telefono", "teléfono", "cell", "celular", "electricidad", "gas", "cable", "servicio"],
+    ),
+]
+
+DEFAULT_CATEGORY_NAME = "Otros"
+
 
 class CSVProcessor:
     """
@@ -63,6 +108,32 @@ class CSVProcessor:
         self.filename = filename
         self.df: pd.DataFrame | None = None
         self.errors: list[str] = []
+
+    def _normalize_text(self, value: str | None) -> str:
+        if value is None:
+            return ""
+        normalized = unicodedata.normalize("NFKD", str(value))
+        normalized = normalized.encode("ascii", "ignore").decode("ascii")
+        return normalized.lower().strip()
+
+    def _detect_category_name(self, row: pd.Series) -> str:
+        category_value = row.get("category")
+        description_value = row.get("description")
+        combined_text = " ".join(
+            part for part in [str(category_value or ""), str(description_value or "")]
+            if part and part.lower() != "nan"
+        )
+        normalized_text = self._normalize_text(combined_text)
+
+        if not normalized_text:
+            return DEFAULT_CATEGORY_NAME
+
+        for category_name, keywords in CATEGORY_PATTERNS:
+            normalized_keywords = [self._normalize_text(keyword) for keyword in keywords]
+            if any(keyword and keyword in normalized_text for keyword in normalized_keywords):
+                return category_name
+
+        return DEFAULT_CATEGORY_NAME
 
     # ─────────────────────────────────────────────
     # PASO 1: Leer el CSV con detección automática
@@ -368,7 +439,10 @@ class CSVProcessor:
         else:
             df["description"] = None
 
-        # 6. Validar
+        # 6. Detectar categoría por fila
+        df["category_name"] = df.apply(self._detect_category_name, axis=1)
+
+        # 7. Validar
         df = self._validate_rows(df)
 
         # Guardamos el DataFrame procesado para uso posterior
@@ -393,6 +467,7 @@ class CSVProcessor:
                 "description": row.get("description"),
                 "amount": float(row["amount"]) if pd.notna(row["amount"]) else 0,
                 "type": row["type"],
+                "category_name": row.get("category_name") or DEFAULT_CATEGORY_NAME,
                 "is_valid": bool(row["is_valid"]),
                 "error": row.get("validation_error"),
             })
@@ -422,6 +497,7 @@ class CSVProcessor:
                 "amount": Decimal(str(round(float(row["amount"]), 2))),
                 "description": row.get("description"),
                 "type": row["type"],
+                "category_name": row.get("category_name") or DEFAULT_CATEGORY_NAME,
                 # Convertimos a datetime con timezone UTC
                 "date": row["date"].to_pydatetime().replace(tzinfo=timezone.utc)
                 if pd.notna(row["date"])

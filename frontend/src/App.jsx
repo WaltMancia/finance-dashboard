@@ -4,23 +4,9 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import LoginPage from './pages/auth/LoginPage.jsx';
 import RegisterPage from './pages/auth/RegisterPage.jsx';
 import DashboardPage from './pages/dashboard/DashboardPage.jsx';
-
-// Placeholders para los próximos pasos
-const TransactionsPage = () => (
-  <div className="text-gray-500 text-center py-20">
-    Transacciones — Próximo paso
-  </div>
-);
-const AnalyticsPage = () => (
-  <div className="text-gray-500 text-center py-20">
-    Análisis — Próximo paso
-  </div>
-);
-const ImportPage = () => (
-  <div className="text-gray-500 text-center py-20">
-    Importar CSV — Próximo paso
-  </div>
-);
+import TransactionsPage from './pages/transactions/TransactionsPage.jsx';
+import AnalyticsPage from './pages/analytics/AnalyticsPage.jsx';
+import ImportPage from './pages/import/ImportPage.jsx';
 
 const App = () => (
   <Routes>

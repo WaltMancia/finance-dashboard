@@ -9,10 +9,9 @@ export const previewCSVService = async (file) => {
     return data;
 };
 
-export const importCSVService = async (file, categoryId = null) => {
+export const importCSVService = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    if (categoryId) formData.append('category_id', categoryId);
     const { data } = await api.post('/csv/import', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
     });

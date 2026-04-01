@@ -1,11 +1,29 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile
 from app.infrastructure.ml.csv_processor import CSVProcessor
-from app.infrastructure.repositories import csv_import_repository, transaction_repository
+from app.infrastructure.repositories import (
+    category_repository,
+    csv_import_repository,
+    transaction_repository,
+)
 
 
 # Límite de tamaño del archivo: 5MB
 MAX_FILE_SIZE = 5 * 1024 * 1024
+
+
+def _normalize_text(value: str | None) -> str:
+    if value is None:
+        return ""
+    return str(value).strip().casefold()
+
+
+def _build_category_lookup(db: Session, user_id: int) -> dict[str, int]:
+    categories = category_repository.find_all_for_user(db, user_id)
+    return {
+        _normalize_text(category.name): category.id
+        for category in categories
+    }
 
 
 async def preview_csv(file: UploadFile) -> dict:
@@ -48,6 +66,8 @@ async def import_csv(
         processor = CSVProcessor(content, file.filename)
         processor.process()
 
+        category_lookup = _build_category_lookup(db, user_id)
+
         valid_transactions = processor.get_valid_transactions()
 
         if not valid_transactions:
@@ -63,8 +83,17 @@ async def import_csv(
         # Insertamos todas las transacciones válidas
         imported_count = 0
         for transaction_data in valid_transactions:
-            if category_id:
+            if category_id is not None:
                 transaction_data["category_id"] = category_id
+            else:
+                detected_category = transaction_data.pop("category_name", None)
+                detected_category_id = category_lookup.get(
+                    _normalize_text(detected_category)
+                )
+                if detected_category_id is not None:
+                    transaction_data["category_id"] = detected_category_id
+
+            transaction_data.pop("category_name", None)
 
             transaction_repository.create(db, user_id, transaction_data)
             imported_count += 1
