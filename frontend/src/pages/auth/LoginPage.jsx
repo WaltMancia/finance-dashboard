@@ -29,14 +29,14 @@ const LoginPage = () => {
               items-center justify-center">
                             <TrendingUp size={20} className="text-white" />
                         </div>
-                        <span className="text-white font-bold text-xl">FinanceAI</span>
+                        <span className="text-white font-bold text-xl">FinanceAnalytics</span>
                     </div>
 
                     <h1 className="text-4xl font-bold text-white leading-tight mb-4">
                         Toma el control de tus finanzas
                     </h1>
                     <p className="text-gray-400 text-lg leading-relaxed">
-                        Analiza tus gastos, predice tendencias y toma mejores decisiones financieras con IA.
+                        Analiza tus gastos, predice tendencias y toma mejores decisiones financieras con Análisis de datos.
                     </p>
 
                     <div className="mt-10 space-y-4">

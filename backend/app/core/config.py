@@ -10,7 +10,8 @@ class Settings(BaseSettings):
 
     # Base de datos
     database_url: str
-    test_database_url: str
+    test_database_url: str | None = None
+    reset_secret: str | None = None
 
     # JWT
     secret_key: str
