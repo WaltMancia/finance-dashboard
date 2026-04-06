@@ -197,180 +197,183 @@ const TransactionsPage = () => {
                     }
                 />
             ) : (
-                <div className="space-y-3 lg:hidden">
-                    {transactions.map((tx) => (
-                        <Card key={tx.id} className="p-4">
-                            <div className="flex items-start justify-between gap-4">
-                                <div className="min-w-0 flex-1 space-y-3">
-                                    <div>
-                                        <p className="font-medium text-gray-900 break-words">
-                                            {tx.description || '—'}
-                                        </p>
-                                        <p className="mt-1 text-xs text-gray-400">
-                                            {new Date(tx.date).toLocaleDateString('es-ES', {
-                                                day: '2-digit', month: 'short', year: 'numeric',
-                                            })}
-                                        </p>
+                <>
+                    <div className="space-y-3 lg:hidden">
+                        {transactions.map((tx) => (
+                            <Card key={tx.id} className="p-4">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="min-w-0 flex-1 space-y-3">
+                                        <div>
+                                            <p className="font-medium text-gray-900 break-words">
+                                                {tx.description || '—'}
+                                            </p>
+                                            <p className="mt-1 text-xs text-gray-400">
+                                                {new Date(tx.date).toLocaleDateString('es-ES', {
+                                                    day: '2-digit', month: 'short', year: 'numeric',
+                                                })}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <Badge variant={tx.type === 'income' ? 'income' : 'expense'}>
+                                                {typeLabel[tx.type]}
+                                            </Badge>
+                                            {tx.category ? (
+                                                <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
+                                                    <span
+                                                        className="h-2.5 w-2.5 flex-shrink-0 rounded-full"
+                                                        style={{ backgroundColor: tx.category.color }}
+                                                    />
+                                                    {tx.category.icon} {tx.category.name}
+                                                </span>
+                                            ) : (
+                                                <span className="text-sm text-gray-400">Sin categoría</span>
+                                            )}
+                                        </div>
                                     </div>
 
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <Badge variant={tx.type === 'income' ? 'income' : 'expense'}>
-                                            {typeLabel[tx.type]}
-                                        </Badge>
-                                        {tx.category ? (
-                                            <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
-                                                <span
-                                                    className="h-2.5 w-2.5 flex-shrink-0 rounded-full"
-                                                    style={{ backgroundColor: tx.category.color }}
-                                                />
-                                                {tx.category.icon} {tx.category.name}
-                                            </span>
-                                        ) : (
-                                            <span className="text-sm text-gray-400">Sin categoría</span>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col items-end gap-3">
-                                    <span className={`font-semibold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                        {tx.type === 'income' ? '+' : '-'}
-                                        ${Number(tx.amount).toLocaleString('es', {
-                                            minimumFractionDigits: 2,
-                                        })}
-                                    </span>
-                                    <div className="flex items-center gap-1">
-                                        <button
-                                            onClick={() => handleEdit(tx)}
-                                            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
-                                        >
-                                            <Pencil size={14} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(tx.id)}
-                                            disabled={deletingId === tx.id}
-                                            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:opacity-40"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </Card>
-                    ))}
-                </div>
-
-                <Card className="hidden overflow-hidden lg:block">
-                    <table className="w-full text-sm">
-                        <thead className="bg-gray-50 border-b border-gray-100">
-                            <tr>
-                                <th className="text-left px-5 py-3.5 text-gray-500 font-medium">
-                                    Descripción
-                                </th>
-                                <th className="text-left px-5 py-3.5 text-gray-500 font-medium">
-                                    Categoría
-                                </th>
-                                <th className="text-left px-5 py-3.5 text-gray-500 font-medium">
-                                    Fecha
-                                </th>
-                                <th className="text-left px-5 py-3.5 text-gray-500 font-medium">
-                                    Tipo
-                                </th>
-                                <th className="text-right px-5 py-3.5 text-gray-500 font-medium">
-                                    Monto
-                                </th>
-                                <th className="px-5 py-3.5" />
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-50">
-                            {transactions.map((tx) => (
-                                <tr key={tx.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-5 py-3.5">
-                                        <p className="font-medium text-gray-900 truncate max-w-48">
-                                            {tx.description || '—'}
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-3.5">
-                                        {tx.category ? (
-                                            <span className="flex items-center gap-1.5 text-sm text-gray-600">
-                                                <span
-                                                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                                                    style={{ backgroundColor: tx.category.color }}
-                                                />
-                                                {tx.category.icon} {tx.category.name}
-                                            </span>
-                                        ) : (
-                                            <span className="text-gray-400">Sin categoría</span>
-                                        )}
-                                    </td>
-                                    <td className="px-5 py-3.5 text-gray-500">
-                                        {new Date(tx.date).toLocaleDateString('es-ES', {
-                                            day: '2-digit', month: 'short', year: 'numeric',
-                                        })}
-                                    </td>
-                                    <td className="px-5 py-3.5">
-                                        <Badge variant={tx.type === 'income' ? 'income' : 'expense'}>
-                                            {typeLabel[tx.type]}
-                                        </Badge>
-                                    </td>
-                                    <td className="px-5 py-3.5 text-right">
-                                        <span className={`font-semibold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
-                                            }`}>
+                                    <div className="flex flex-col items-end gap-3">
+                                        <span className={`font-semibold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                             {tx.type === 'income' ? '+' : '-'}
                                             ${Number(tx.amount).toLocaleString('es', {
                                                 minimumFractionDigits: 2,
                                             })}
                                         </span>
-                                    </td>
-                                    <td className="px-5 py-3.5">
-                                        <div className="flex items-center justify-end gap-1">
+                                        <div className="flex items-center gap-1">
                                             <button
                                                 onClick={() => handleEdit(tx)}
-                                                className="p-1.5 text-gray-400 hover:text-gray-700
-                          hover:bg-gray-100 rounded-lg transition-colors"
+                                                className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
                                             >
                                                 <Pencil size={14} />
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(tx.id)}
                                                 disabled={deletingId === tx.id}
-                                                className="p-1.5 text-gray-400 hover:text-rose-600
-                          hover:bg-rose-50 rounded-lg transition-colors
-                          disabled:opacity-40"
+                                                className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:opacity-40"
                                             >
                                                 <Trash2 size={14} />
                                             </button>
                                         </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                    </div>
+                                </div>
+                            </Card>
+                        ))}
 
-                    {/* Paginación */}
-                    {pagination && pagination.total_pages > 1 && (
-                        <div className="flex flex-col gap-3 border-t border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-                            <p className="text-sm text-gray-500">
-                                Página {pagination.page} de {pagination.total_pages}
-                            </p>
-                            <div className="flex flex-col gap-2 sm:flex-row">
-                                <Button
-                                    variant="secondary" size="sm"
-                                    onClick={() => setPage((p) => p - 1)}
-                                    disabled={page === 1}
-                                >
-                                    ← Anterior
-                                </Button>
-                                <Button
-                                    variant="secondary" size="sm"
-                                    onClick={() => setPage((p) => p + 1)}
-                                    disabled={page === pagination.total_pages}
-                                >
-                                    Siguiente →
-                                </Button>
+                    </div>
+
+                    <Card className="hidden overflow-hidden lg:block">
+                        <table className="w-full text-sm">
+                            <thead className="bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th className="text-left px-5 py-3.5 text-gray-500 font-medium">
+                                        Descripción
+                                    </th>
+                                    <th className="text-left px-5 py-3.5 text-gray-500 font-medium">
+                                        Categoría
+                                    </th>
+                                    <th className="text-left px-5 py-3.5 text-gray-500 font-medium">
+                                        Fecha
+                                    </th>
+                                    <th className="text-left px-5 py-3.5 text-gray-500 font-medium">
+                                        Tipo
+                                    </th>
+                                    <th className="text-right px-5 py-3.5 text-gray-500 font-medium">
+                                        Monto
+                                    </th>
+                                    <th className="px-5 py-3.5" />
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50">
+                                {transactions.map((tx) => (
+                                    <tr key={tx.id} className="hover:bg-gray-50 transition-colors">
+                                        <td className="px-5 py-3.5">
+                                            <p className="font-medium text-gray-900 truncate max-w-48">
+                                                {tx.description || '—'}
+                                            </p>
+                                        </td>
+                                        <td className="px-5 py-3.5">
+                                            {tx.category ? (
+                                                <span className="flex items-center gap-1.5 text-sm text-gray-600">
+                                                    <span
+                                                        className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                                        style={{ backgroundColor: tx.category.color }}
+                                                    />
+                                                    {tx.category.icon} {tx.category.name}
+                                                </span>
+                                            ) : (
+                                                <span className="text-gray-400">Sin categoría</span>
+                                            )}
+                                        </td>
+                                        <td className="px-5 py-3.5 text-gray-500">
+                                            {new Date(tx.date).toLocaleDateString('es-ES', {
+                                                day: '2-digit', month: 'short', year: 'numeric',
+                                            })}
+                                        </td>
+                                        <td className="px-5 py-3.5">
+                                            <Badge variant={tx.type === 'income' ? 'income' : 'expense'}>
+                                                {typeLabel[tx.type]}
+                                            </Badge>
+                                        </td>
+                                        <td className="px-5 py-3.5 text-right">
+                                            <span className={`font-semibold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
+                                                }`}>
+                                                {tx.type === 'income' ? '+' : '-'}
+                                                ${Number(tx.amount).toLocaleString('es', {
+                                                    minimumFractionDigits: 2,
+                                                })}
+                                            </span>
+                                        </td>
+                                        <td className="px-5 py-3.5">
+                                            <div className="flex items-center justify-end gap-1">
+                                                <button
+                                                    onClick={() => handleEdit(tx)}
+                                                    className="p-1.5 text-gray-400 hover:text-gray-700
+                          hover:bg-gray-100 rounded-lg transition-colors"
+                                                >
+                                                    <Pencil size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(tx.id)}
+                                                    disabled={deletingId === tx.id}
+                                                    className="p-1.5 text-gray-400 hover:text-rose-600
+                          hover:bg-rose-50 rounded-lg transition-colors
+                          disabled:opacity-40"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        {/* Paginación */}
+                        {pagination && pagination.total_pages > 1 && (
+                            <div className="flex flex-col gap-3 border-t border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                                <p className="text-sm text-gray-500">
+                                    Página {pagination.page} de {pagination.total_pages}
+                                </p>
+                                <div className="flex flex-col gap-2 sm:flex-row">
+                                    <Button
+                                        variant="secondary" size="sm"
+                                        onClick={() => setPage((p) => p - 1)}
+                                        disabled={page === 1}
+                                    >
+                                        ← Anterior
+                                    </Button>
+                                    <Button
+                                        variant="secondary" size="sm"
+                                        onClick={() => setPage((p) => p + 1)}
+                                        disabled={page === pagination.total_pages}
+                                    >
+                                        Siguiente →
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </Card>
+                        )}
+                    </Card>
+                </>
             )}
 
             {/* Modal */}
