@@ -40,7 +40,7 @@ const LoginPage = () => {
                     </p>
 
                     <div className="mt-10 space-y-4">
-                        {['Análisis inteligente de gastos', 'Predicciones con IA', 'Importa tus extractos CSV'].map((feat) => (
+                        {['Análisis inteligente de gastos', 'Predicciones con Análisis de Datos', 'Importa tus extractos CSV'].map((feat) => (
                             <div key={feat} className="flex items-center gap-3">
                                 <div className="w-5 h-5 bg-emerald-500 rounded-full flex
                   items-center justify-center flex-shrink-0">
