@@ -60,15 +60,13 @@ const TransactionModal = ({ transaction, categories, onClose, onSuccess }) => {
 
     return (
         // Overlay oscuro detrás del modal
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center
-      justify-center p-4" onClick={onClose}>
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 sm:items-center sm:p-4" onClick={onClose}>
             <div
-                className="bg-white rounded-2xl w-full max-w-md shadow-xl"
+                className="max-h-[calc(100vh-1rem)] w-full max-w-md overflow-y-auto rounded-t-2xl bg-white shadow-xl sm:max-h-[calc(100vh-2rem)] sm:rounded-2xl"
                 onClick={(e) => e.stopPropagation()} // Evita cerrar al hacer clic dentro
             >
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-5
-          border-b border-gray-100">
+                <div className="flex items-center justify-between border-b border-gray-100 px-4 py-4 sm:px-6 sm:py-5">
                     <h2 className="font-semibold text-gray-900">
                         {isEditing ? 'Editar transacción' : 'Nueva transacción'}
                     </h2>
@@ -81,19 +79,19 @@ const TransactionModal = ({ transaction, categories, onClose, onSuccess }) => {
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4 p-4 sm:p-6">
                     {/* Tipo */}
-                    <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100 rounded-xl">
+                    <div className="grid grid-cols-2 gap-2 rounded-xl bg-gray-100 p-1">
                         {['expense', 'income'].map((type) => (
                             <button
                                 key={type}
                                 type="button"
                                 onClick={() => setForm({ ...form, type })}
-                                className={`py-2 rounded-lg text-sm font-medium transition-colors ${form.type === type
-                                        ? type === 'expense'
-                                            ? 'bg-white text-rose-600 shadow-sm'
-                                            : 'bg-white text-emerald-600 shadow-sm'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                className={`rounded-lg py-2 text-sm font-medium transition-colors ${form.type === type
+                                    ? type === 'expense'
+                                        ? 'bg-white text-rose-600 shadow-sm'
+                                        : 'bg-white text-emerald-600 shadow-sm'
+                                    : 'text-gray-500 hover:text-gray-700'
                                     }`}
                             >
                                 {type === 'expense' ? '💸 Gasto' : '💰 Ingreso'}
@@ -176,7 +174,7 @@ const TransactionModal = ({ transaction, categories, onClose, onSuccess }) => {
                     </div>
 
                     {/* Botones */}
-                    <div className="flex gap-3 pt-2">
+                    <div className="flex flex-col gap-3 pt-2 sm:flex-row">
                         <Button type="submit" loading={loading} className="flex-1">
                             {isEditing ? 'Guardar cambios' : 'Crear transacción'}
                         </Button>

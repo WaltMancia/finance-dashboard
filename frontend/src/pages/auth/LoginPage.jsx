@@ -14,7 +14,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex">
+        <div className="min-h-screen flex bg-gray-50">
             {/* Panel izquierdo — decorativo */}
             <div className="hidden lg:flex lg:w-1/2 bg-gray-900 flex-col
         justify-center px-16 relative overflow-hidden">
@@ -54,7 +54,7 @@ const LoginPage = () => {
             </div>
 
             {/* Panel derecho — formulario */}
-            <div className="flex-1 flex items-center justify-center px-8">
+            <div className="flex flex-1 items-center justify-center px-4 py-10 sm:px-8">
                 <div className="w-full max-w-md">
                     <div className="mb-8">
                         <h2 className="text-2xl font-bold text-gray-900">Bienvenido de nuevo</h2>

@@ -42,7 +42,7 @@ const PredictionCard = ({ prediction }) => {
     return (
         <Card>
             <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="font-semibold text-gray-900">Predicción del mes</h3>
                     <span className={`text-xs font-medium ${confidence.color}`}>
                         {confidence.label}
@@ -51,7 +51,7 @@ const PredictionCard = ({ prediction }) => {
             </CardHeader>
 
             <CardContent>
-                <div className="grid grid-cols-2 gap-4 mb-5">
+                <div className="grid grid-cols-1 gap-4 mb-5 sm:grid-cols-2">
                     {/* Gastado hasta hoy */}
                     <div className="bg-gray-50 rounded-xl p-4">
                         <p className="text-xs text-gray-500 mb-1">Gastado hasta hoy</p>
@@ -77,7 +77,7 @@ const PredictionCard = ({ prediction }) => {
 
                 {/* Indicador de tendencia */}
                 <div className={`flex items-center gap-3 p-3 rounded-xl ${trend.bg} mb-5`}>
-                    <div className={`p-2 rounded-lg bg-white`}>
+                    <div className="rounded-lg bg-white p-2">
                         <TrendIcon size={16} className={trend.color} />
                     </div>
                     <div>
@@ -90,7 +90,7 @@ const PredictionCard = ({ prediction }) => {
 
                 {/* Promedio diario */}
                 <div className="flex items-center gap-2 mb-5 text-sm text-gray-600">
-                    <AlertCircle size={14} className="text-gray-400 flex-shrink-0" />
+                    <AlertCircle size={14} className="text-gray-400 shrink-0" />
                     <span>
                         Promedio diario actual:
                         <span className="font-semibold text-gray-900 ml-1">

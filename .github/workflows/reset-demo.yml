@@ -2,16 +2,27 @@ name: Reset Demo Data
 
 on:
   schedule:
-    # Cada día a las 3 AM UTC
-    - cron: '0 3 * * *'
-  # También permite ejecutarlo manualmente desde GitHub
-  workflow_dispatch:
+    - cron: '0 12 * * *'    # Cada día a las 12 UTC (6 AM Guatemala)
+  workflow_dispatch:          # Permite ejecutarlo manualmente desde GitHub
 
 jobs:
   reset:
     runs-on: ubuntu-latest
     steps:
+      - name: Wake up server
+        run: |
+          curl -s ${{ secrets.API_URL }}/health || true
+          echo "Waiting for server to wake up..."
+          sleep 30
+
       - name: Reset demo database
         run: |
-          curl -X POST ${{ secrets.API_URL }}/api/v1/admin/reset-demo \
-            -H "x-reset-secret: ${{ secrets.RESET_SECRET }}"
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST ${{ secrets.API_URL }}/api/v1/admin/reset-demo \
+            -H "x-reset-secret: ${{ secrets.RESET_SECRET }}")
+          echo "Response status: $response"
+          if [ "$response" != "200" ]; then
+            echo "Reset failed with status $response"
+            exit 1
+          fi
+          echo "Demo data reset successfully!"

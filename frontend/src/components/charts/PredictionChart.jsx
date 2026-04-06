@@ -33,17 +33,17 @@ const PredictionChart = ({ data = [], prediction = null }) => {
     }
 
     return (
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={180}>
             <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                 <XAxis
                     dataKey="name"
-                    tick={{ fontSize: 11, fill: '#94a3b8' }}
+                    tick={{ fontSize: 10, fill: '#94a3b8' }}
                     axisLine={false}
                     tickLine={false}
                 />
                 <YAxis
-                    tick={{ fontSize: 11, fill: '#94a3b8' }}
+                    tick={{ fontSize: 10, fill: '#94a3b8' }}
                     axisLine={false}
                     tickLine={false}
                     tickFormatter={(v) => `$${v.toLocaleString()}`}

@@ -43,28 +43,29 @@ const MonthlyTrendChart = ({ data = [] }) => {
         // ResponsiveContainer hace la gráfica responsiva automáticamente
         // width="100%" → toma todo el ancho del contenedor padre
         // height={280} → altura fija en píxeles
-        <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={formattedData} barGap={4}>
+        <ResponsiveContainer width="100%" height={240}>
+            <BarChart data={formattedData} barGap={4} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                 <CartesianGrid
                     strokeDasharray="3 3"
                     stroke="#f1f5f9"
-                    vertical={false}  // Solo líneas horizontales — más limpio
+                    vertical={false}
                 />
                 <XAxis
                     dataKey="name"
-                    tick={{ fontSize: 12, fill: '#94a3b8' }}
+                    tick={{ fontSize: 11, fill: '#94a3b8' }}
                     axisLine={false}
                     tickLine={false}
+                    interval={0}
                 />
                 <YAxis
-                    tick={{ fontSize: 12, fill: '#94a3b8' }}
+                    tick={{ fontSize: 11, fill: '#94a3b8' }}
                     axisLine={false}
                     tickLine={false}
                     tickFormatter={(v) => `$${v.toLocaleString()}`}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
-                    wrapperStyle={{ fontSize: '12px', paddingTop: '16px' }}
+                    wrapperStyle={{ fontSize: '12px', paddingTop: '12px' }}
                 />
                 <Bar dataKey="Ingresos" fill="#10b981" radius={[6, 6, 0, 0]} />
                 <Bar dataKey="Gastos" fill="#f43f5e" radius={[6, 6, 0, 0]} />

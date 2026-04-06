@@ -16,13 +16,13 @@ const DashboardPage = () => {
     const { data, loading, error, refetch } = useDashboard();
 
     if (loading) return (
-        <div className="flex items-center justify-center min-h-96">
+        <div className="flex items-center justify-center min-h-[24rem]">
             <Spinner size="lg" />
         </div>
     );
 
     if (error) return (
-        <div className="flex items-center justify-center min-h-96">
+        <div className="flex items-center justify-center min-h-[24rem]">
             <EmptyState
                 icon="⚠️"
                 title="Error al cargar"
@@ -37,16 +37,16 @@ const DashboardPage = () => {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
                         Hola, {user?.name?.split(' ')[0]} 👋🏻
                     </h1>
                     <p className="text-gray-500 text-sm mt-0.5">
                         Aquí está el resumen de tus finanzas
                     </p>
                 </div>
-                <Button variant="secondary" size="sm" onClick={refetch}>
+                <Button variant="secondary" size="sm" onClick={refetch} className="w-full sm:w-auto">
                     <RefreshCw size={15} />
                     Actualizar
                 </Button>
@@ -58,12 +58,12 @@ const DashboardPage = () => {
                     title="Aún no tienes transacciones"
                     description="Añade tu primera transacción o importa un CSV para ver tus análisis"
                     action={
-                        <div className="flex gap-3">
+                        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                             <Link to="/transacciones">
-                                <Button>Añadir transacción</Button>
+                                <Button className="w-full sm:w-auto">Añadir transacción</Button>
                             </Link>
                             <Link to="/importar">
-                                <Button variant="secondary">Importar CSV</Button>
+                                <Button variant="secondary" className="w-full sm:w-auto">Importar CSV</Button>
                             </Link>
                         </div>
                     }
@@ -128,8 +128,7 @@ const DashboardPage = () => {
                                 {data.comparison && (
                                     <div className="space-y-4">
                                         {/* Gastos */}
-                                        <div className="flex items-center justify-between p-3
-                      bg-gray-50 rounded-xl">
+                                        <div className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-xl">
                                             <span className="text-sm text-gray-600">Gastos</span>
                                             <div className="text-right">
                                                 <p className="font-semibold text-gray-900">
@@ -144,8 +143,7 @@ const DashboardPage = () => {
                                         </div>
 
                                         {/* Ingresos */}
-                                        <div className="flex items-center justify-between p-3
-                      bg-gray-50 rounded-xl">
+                                        <div className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-xl">
                                             <span className="text-sm text-gray-600">Ingresos</span>
                                             <div className="text-right">
                                                 <p className="font-semibold text-gray-900">

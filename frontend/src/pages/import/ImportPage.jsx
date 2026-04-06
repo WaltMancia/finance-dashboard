@@ -74,22 +74,22 @@ const ImportPage = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div className="mx-auto max-w-2xl space-y-6 px-0 sm:px-0">
             <div>
-                <h1 className="text-2xl font-bold text-gray-900">Importar CSV</h1>
+                <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Importar CSV</h1>
                 <p className="text-gray-500 text-sm mt-0.5">
                     Importa transacciones desde el extracto de tu banco
                 </p>
             </div>
 
             {/* Indicador de pasos */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
                 {[
                     { n: 1, label: 'Seleccionar archivo' },
                     { n: 2, label: 'Previsualizar' },
                     { n: 3, label: 'Completado' },
                 ].map(({ n, label }, i) => (
-                    <div key={n} className="flex items-center gap-2 flex-1">
+                    <div key={n} className="flex items-center gap-2 sm:flex-1">
                         <div className={`w-7 h-7 rounded-full flex items-center justify-center
               text-xs font-bold shrink-0 ${step >= n
                                 ? 'bg-gray-900 text-white'
@@ -100,7 +100,7 @@ const ImportPage = () => {
                         <span className={`text-xs ${step >= n ? 'text-gray-900' : 'text-gray-400'}`}>
                             {label}
                         </span>
-                        {i < 2 && <div className="flex-1 h-px bg-gray-200 ml-2" />}
+                        {i < 2 && <div className="hidden h-px bg-gray-200 sm:block sm:flex-1 sm:ml-2" />}
                     </div>
                 ))}
             </div>
@@ -112,7 +112,7 @@ const ImportPage = () => {
                         {/* Zona de drop */}
                         <div
                             onClick={() => fileInputRef.current?.click()}
-                            className={`border-2 border-dashed rounded-2xl p-10 text-center
+                            className={`border-2 border-dashed rounded-2xl p-8 text-center sm:p-10
                 cursor-pointer transition-colors ${file
                                     ? 'border-emerald-300 bg-emerald-50'
                                     : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
@@ -195,7 +195,7 @@ const ImportPage = () => {
             {step === STEPS.PREVIEW && preview && (
                 <div className="space-y-4">
                     {/* Resumen del análisis */}
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                         {[
                             { label: 'Total filas', value: preview.total_rows, color: 'text-gray-900' },
                             { label: 'Válidas', value: preview.valid_rows, color: 'text-emerald-600' },
@@ -216,7 +216,7 @@ const ImportPage = () => {
                             </h3>
                         </CardHeader>
                         <div className="max-h-96 overflow-auto">
-                            <table className="w-full text-sm">
+                            <table className="min-w-[760px] w-full text-sm">
                                 <thead className="sticky top-0 z-10 bg-gray-50 border-y border-gray-100">
                                     <tr>
                                         <th className="text-left px-4 py-3 text-gray-500 font-medium">#</th>
@@ -267,7 +267,7 @@ const ImportPage = () => {
                         </div>
                     </Card>
 
-                    <div className="flex gap-3">
+                    <div className="flex flex-col gap-3 sm:flex-row">
                         <Button
                             className="flex-1"
                             onClick={handleImport}
@@ -299,7 +299,7 @@ const ImportPage = () => {
                                 </span>
                             )}
                         </p>
-                        <div className="flex gap-3 justify-center">
+                        <div className="flex flex-col gap-3 justify-center sm:flex-row">
                             <Button onClick={handleReset}>
                                 Importar otro archivo
                             </Button>

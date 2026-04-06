@@ -105,16 +105,16 @@ const TransactionsPage = () => {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Transacciones</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Transacciones</h1>
                     {pagination && (
                         <p className="text-sm text-gray-500 mt-0.5">
                             {pagination.total} registros en total
                         </p>
                     )}
                 </div>
-                <Button onClick={() => setShowModal(true)}>
+                <Button onClick={() => setShowModal(true)} className="w-full sm:w-auto">
                     <Plus size={16} />
                     Nueva transacción
                 </Button>
@@ -122,9 +122,9 @@ const TransactionsPage = () => {
 
             {/* Filtros */}
             <Card className="p-4">
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap">
                     {/* Búsqueda */}
-                    <form onSubmit={handleSearch} className="flex gap-2 flex-1 min-w-48">
+                    <form onSubmit={handleSearch} className="flex w-full gap-2 lg:flex-1 lg:min-w-48">
                         <div className="relative flex-1">
                             <Search size={15} className="absolute left-3 top-1/2
                 -translate-y-1/2 text-gray-400" />
@@ -132,9 +132,7 @@ const TransactionsPage = () => {
                                 value={searchInput}
                                 onChange={(e) => setSearchInput(e.target.value)}
                                 placeholder="Buscar por descripción..."
-                                className="w-full pl-9 pr-4 py-2 border border-gray-200
-                  rounded-xl text-sm focus:outline-none focus:ring-2
-                  focus:ring-gray-900"
+                                className="w-full rounded-xl border border-gray-200 py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
                             />
                         </div>
                         <Button type="submit" size="sm" variant="secondary">
@@ -146,8 +144,7 @@ const TransactionsPage = () => {
                     <select
                         value={typeFilter}
                         onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-                        className="border border-gray-200 rounded-xl px-3 py-2 text-sm
-              focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white"
+                        className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 lg:w-auto"
                     >
                         <option value="">Todos los tipos</option>
                         <option value="income">Ingresos</option>
@@ -158,8 +155,7 @@ const TransactionsPage = () => {
                     <select
                         value={categoryFilter}
                         onChange={(e) => { setCategoryFilter(e.target.value); setPage(1); }}
-                        className="border border-gray-200 rounded-xl px-3 py-2 text-sm
-              focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white"
+                        className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 lg:w-auto"
                     >
                         <option value="">Todas las categorías</option>
                         {categories.map((cat) => (
@@ -171,7 +167,7 @@ const TransactionsPage = () => {
 
                     {/* Limpiar filtros */}
                     {hasFilters && (
-                        <Button variant="ghost" size="sm" onClick={clearFilters}>
+                        <Button variant="ghost" size="sm" onClick={clearFilters} className="w-full sm:w-auto">
                             <X size={14} />
                             Limpiar
                         </Button>
@@ -201,7 +197,69 @@ const TransactionsPage = () => {
                     }
                 />
             ) : (
-                <Card className="overflow-hidden">
+                <div className="space-y-3 lg:hidden">
+                    {transactions.map((tx) => (
+                        <Card key={tx.id} className="p-4">
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="min-w-0 flex-1 space-y-3">
+                                    <div>
+                                        <p className="font-medium text-gray-900 break-words">
+                                            {tx.description || '—'}
+                                        </p>
+                                        <p className="mt-1 text-xs text-gray-400">
+                                            {new Date(tx.date).toLocaleDateString('es-ES', {
+                                                day: '2-digit', month: 'short', year: 'numeric',
+                                            })}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <Badge variant={tx.type === 'income' ? 'income' : 'expense'}>
+                                            {typeLabel[tx.type]}
+                                        </Badge>
+                                        {tx.category ? (
+                                            <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
+                                                <span
+                                                    className="h-2.5 w-2.5 flex-shrink-0 rounded-full"
+                                                    style={{ backgroundColor: tx.category.color }}
+                                                />
+                                                {tx.category.icon} {tx.category.name}
+                                            </span>
+                                        ) : (
+                                            <span className="text-sm text-gray-400">Sin categoría</span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col items-end gap-3">
+                                    <span className={`font-semibold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                        {tx.type === 'income' ? '+' : '-'}
+                                        ${Number(tx.amount).toLocaleString('es', {
+                                            minimumFractionDigits: 2,
+                                        })}
+                                    </span>
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            onClick={() => handleEdit(tx)}
+                                            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                                        >
+                                            <Pencil size={14} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(tx.id)}
+                                            disabled={deletingId === tx.id}
+                                            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:opacity-40"
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+
+                <Card className="hidden overflow-hidden lg:block">
                     <table className="w-full text-sm">
                         <thead className="bg-gray-50 border-b border-gray-100">
                             <tr>
@@ -290,12 +348,11 @@ const TransactionsPage = () => {
 
                     {/* Paginación */}
                     {pagination && pagination.total_pages > 1 && (
-                        <div className="flex items-center justify-between px-5 py-4
-              border-t border-gray-100">
+                        <div className="flex flex-col gap-3 border-t border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                             <p className="text-sm text-gray-500">
                                 Página {pagination.page} de {pagination.total_pages}
                             </p>
-                            <div className="flex gap-2">
+                            <div className="flex flex-col gap-2 sm:flex-row">
                                 <Button
                                     variant="secondary" size="sm"
                                     onClick={() => setPage((p) => p - 1)}

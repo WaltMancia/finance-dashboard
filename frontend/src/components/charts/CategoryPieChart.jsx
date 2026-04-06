@@ -57,14 +57,14 @@ const CategoryPieChart = ({ data = [] }) => {
     const chartData = data.slice(0, 6);
 
     return (
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={300}>
             <PieChart>
                 <Pie
                     data={chartData}
                     cx="50%"
                     cy="50%"
-                    outerRadius={100}
-                    innerRadius={50}  // innerRadius hace el "donut" — más moderno que pie sólido
+                    outerRadius={92}
+                    innerRadius={54}
                     dataKey="total"
                     labelLine={false}
                     label={CustomLabel}
@@ -79,6 +79,10 @@ const CategoryPieChart = ({ data = [] }) => {
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
+                    verticalAlign="bottom"
+                    align="center"
+                    iconSize={10}
+                    height={56}
                     formatter={(_, entry) => (
                         <span style={{ fontSize: '12px', color: '#374151' }}>
                             {entry.payload.category_icon} {entry.payload.category_name}

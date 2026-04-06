@@ -59,7 +59,7 @@ const AnalyticsPage = () => {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-gray-900">Análisis Financiero</h1>
+                <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Análisis Financiero</h1>
                 <p className="text-gray-500 text-sm mt-0.5">
                     Patrones y tendencias de tus finanzas
                 </p>
@@ -81,7 +81,7 @@ const AnalyticsPage = () => {
             {/* Desglose por categoría con filtro de mes */}
             <Card>
                 <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div>
                             <h3 className="font-semibold text-gray-900">
                                 Gastos por categoría
@@ -92,14 +92,12 @@ const AnalyticsPage = () => {
                         </div>
 
                         {/* Selector de mes */}
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 sm:self-start">
                             <Calendar size={15} className="text-gray-400" />
                             <select
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="border border-gray-200 rounded-xl px-3 py-1.5
-                  text-sm focus:outline-none focus:ring-2 focus:ring-gray-900
-                  bg-white"
+                                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white sm:w-auto sm:py-1.5"
                             >
                                 <option value="">Todos los meses</option>
                                 {availableMonths.map((m) => (
@@ -110,7 +108,7 @@ const AnalyticsPage = () => {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                         <CategoryPieChart data={categoryData} />
 
                         {/* Tabla de desglose */}

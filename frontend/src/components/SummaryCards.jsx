@@ -3,15 +3,15 @@ import Card, { CardContent } from './ui/Card.jsx';
 
 const MetricCard = ({ title, value, icon: Icon, color, change, changeLabel }) => (
     <Card className="hover:shadow-md transition-shadow duration-300">
-        <CardContent className="pt-6">
-            <div className="flex items-start justify-between">
+        <CardContent className="pt-5 sm:pt-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                     <p className="text-sm text-gray-500 font-medium">{title}</p>
                     <p className={`text-2xl font-bold mt-1 ${color}`}>
                         ${value?.toLocaleString('es', { minimumFractionDigits: 2 }) ?? '0.00'}
                     </p>
                 </div>
-                <div className={`p-2.5 rounded-xl ${color === 'text-emerald-600'
+                <div className={`self-start p-2.5 rounded-xl ${color === 'text-emerald-600'
                     ? 'bg-emerald-50' : color === 'text-rose-600'
                         ? 'bg-rose-50' : 'bg-blue-50'}`}>
                     <Icon size={20} className={color} />
@@ -37,7 +37,7 @@ const SummaryCards = ({ summary, comparison }) => {
     const incomeChangePct = comparison?.income_change_percentage ?? 0;
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <MetricCard
                 title="Balance Total"
                 value={summary?.balance}
